@@ -2,6 +2,7 @@ package cn.javass.xgen.util.readxml;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,5 +51,32 @@ public class Context {
 
     public void setPreEles(List<Element> preEles) {
         this.preEles = preEles;
+    }
+
+    public List<Element> getNowEles(Element pEle, String eleName) {
+        List<Element> nowEles = new ArrayList<Element>();
+        NodeList childNodes = pEle.getChildNodes();
+        for (int i=0;i<childNodes.getLength();i++){
+                if(childNodes.item(i) instanceof Element){
+                    Element nowEle = (Element) childNodes.item(i);
+                    if(nowEle.getTagName().equals(eleName)){
+                        nowEles.add(nowEle);
+                    }
+                }
+        }
+        return nowEles;
+    }
+
+    public boolean judgeCondition(Element ele, String condition) {
+        if(condition == null || condition.trim().length()==0){
+            return true;
+        }
+
+        String[] ss = condition.split("=");
+        if(ss[1]!=null && ss[1].equals(ele.getAttribute(ss[0]))){
+            return true;
+        }
+
+        return false;
     }
 }
