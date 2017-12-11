@@ -16,7 +16,7 @@ public class XmlUtil {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(XmlUtil.class.getClassLoader().getResourceAsStream(filePathName));
-
+        document.normalize();
         return document;
 
     }

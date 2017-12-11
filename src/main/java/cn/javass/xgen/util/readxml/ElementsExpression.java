@@ -14,6 +14,11 @@ public class ElementsExpression extends ReadXmlExpression{
     //判断的条件
     private String condition;
 
+    public ElementsExpression(String eleName, String condition) {
+        this.eleName = eleName;
+        this.condition = condition;
+    }
+
     public List<ReadXmlExpression> getEles() {
         return eles;
     }
@@ -36,6 +41,18 @@ public class ElementsExpression extends ReadXmlExpression{
 
     public void setCondition(String condition) {
         this.condition = condition;
+    }
+
+    public void addEle(ReadXmlExpression ele){
+        this.eles.add(ele);
+    }
+
+    public void removeEle(ReadXmlExpression ele){
+        this.eles.remove(ele);
+    }
+
+    public void removeAll(){
+        this.eles.clear();
     }
 
     public String[] interpret(Context ctx) {

@@ -48,7 +48,7 @@ public class ElementTerminalExpression extends ReadXmlExpression{
             ele = ctx.getNowEles(pEles.get(0),eleName).get(0);
         }
 
-        if(!ctx.judgeCondition(ele,eleName)){
+        if(!ctx.judgeCondition(ele,condition)){
             return new String[0];
         }
 
