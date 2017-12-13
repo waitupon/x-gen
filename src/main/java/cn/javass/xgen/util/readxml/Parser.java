@@ -27,7 +27,7 @@ public class Parser {
 
 
     public static ReadXmlExpression parse(String expr){
-
+        listEle = new ArrayList<String>();
         //解析表达式，得到需要得到的解析名称，和对应的解析元素
         Map<String,ParseModel> mapPath = parsePathMap(expr);
         //根据元素对应的解析模型，转换解析器对象
@@ -39,7 +39,29 @@ public class Parser {
     }
 
     private static ReadXmlExpression buildTree(List<ReadXmlExpression> list) {
-        return null;
+        ReadXmlExpression retRe = null;
+        ReadXmlExpression preEx = null;
+
+        for(ReadXmlExpression re : list){
+            if(preEx == null){
+                retRe = re;
+                preEx = re;
+            }else{
+                if(preEx instanceof ElementExpression){
+                    ElementExpression ele = (ElementExpression)preEx;
+                    ele.addEle(re);
+
+                    preEx = re;
+                }else if(preEx instanceof ElementsExpression){
+                    ElementsExpression ele = (ElementsExpression)preEx;
+                    ele.addEle(preEx);
+
+                    preEx = re;
+                }
+            }
+        }
+
+        return retRe;
     }
 
     private static List<ReadXmlExpression> mapPath2Expression(Map<String, ParseModel> mapPath) {
@@ -55,8 +77,31 @@ public class Parser {
     }
 
     private static ReadXmlExpression parseModel2ReadXmlExpression(ParseModel model) {
+        ReadXmlExpression obj = null;
+        if(!model.isEnd()){
+                if(model.isSingleValue()){
+                    obj = new ElementExpression(model.getEleName(),model.getCondition());
+                }else{
+                    obj = new ElementsExpression(model.getEleName(),model.getCondition());
+                }
+        }else {
+               if(model.isPropertyValue()){
+                   if(model.isSingleValue()){
+                        obj = new PropertyTerminalExpression(model.getEleName());
+                   }else{
+                        obj = new PropertysTerminalExpression(model.getEleName());
+                   }
+               }else{
+                   if(model.isSingleValue()){
+                       obj = new ElementTerminalExpression(model.getEleName(),model.getCondition());
+                   }else{
+                       obj = new ElementsTerminalExpression(model.getEleName(),model.getCondition());
+                   }
+               }
 
-        return null;
+        }
+
+        return obj;
     }
 
     private static Map<String,ParseModel> parsePathMap(String expr) {

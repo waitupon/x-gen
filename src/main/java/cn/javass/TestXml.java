@@ -15,19 +15,20 @@ public class TestXml {
 //        themes.addEle(theme);
 //        theme.addEle(id);
 
-        ElementExpression needGens = new ElementExpression("NeedGens","");
-        ElementExpression needGen = new ElementExpression("NeedGen","");
-        ElementExpression params = new ElementExpression("Params","");
-
-        ElementsTerminalExpression param = new ElementsTerminalExpression("Param","");
-
-        genConf.addEle(needGens);
-        needGens.addEle(needGen);
-        needGen.addEle(params);
-        params.addEle(param);
-
+//        ElementExpression needGens = new ElementExpression("NeedGens","");
+//        ElementExpression needGen = new ElementExpression("NeedGen","");
+//        ElementExpression params = new ElementExpression("Params","");
+//
+//        ElementsTerminalExpression param = new ElementsTerminalExpression("Param","");
+//
+//        genConf.addEle(needGens);
+//        needGens.addEle(needGen);
+//        needGen.addEle(params);
+//        params.addEle(param);
+//
         Context ctx = Context.newInstance("xgenconfxml/GenConf.xml");
-        String[] ss = genConf.interpret(ctx);
+
+        String[] ss = Parser.parse("GenConf/NeedGens/NeedGen/Params/Param$[id=fileName]").interpret(ctx);
         for(int i=0;i<ss.length;i++){
             System.out.println("ss = " + ss[i]);
         }
