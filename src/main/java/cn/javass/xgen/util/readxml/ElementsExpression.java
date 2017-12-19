@@ -80,4 +80,20 @@ public class ElementsExpression extends ReadXmlExpression{
 
         return ss;
     }
+
+    @Override
+    public Object clone() {
+        ElementsExpression obj = null;
+        try {
+            obj = (ElementsExpression) super.clone();
+            List<ReadXmlExpression> objEles = new ArrayList<ReadXmlExpression>();
+            for (ReadXmlExpression re : eles) {
+                objEles.add(re);
+            }
+            obj.setEles(objEles);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return obj;
+    }
 }

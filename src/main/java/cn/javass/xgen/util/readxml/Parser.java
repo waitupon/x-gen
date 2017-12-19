@@ -65,12 +65,14 @@ public class Parser {
 
         //5：真正解析剩下的需要解析的 string,把两个部分的抽象语法树合并起来
         if(needParseExpr.trim().length()>0){
-            //expression = parse2(needParseExpr);
+            expression = parse2(needParseExpr,notParseExpr,mapRe);
         }else{
             expression = mapRe.get(notParseExpr);
         }
 
         //6：解析完了，该重新设置 备忘录
+        ParseCaretaker.newInstance().saveMemento(new MementoImpl(mapRe));
+
         return expression;
     }
 
@@ -97,11 +99,16 @@ public class Parser {
         Map<String,ParseModel> mapPath = parseMapPath(needParseExpr);
         //根据元素对应的解析模型，转换解析器对象
         Map<String,ReadXmlExpression> mapPathAndRe = mapPath2Expression(mapPath);
+
+        ReadXmlExpression prefixRe = mapRe.get(notParseExpr+BACKLASH);
+
+        if(prefixRe!=null){
+            prefixRe = (ReadXmlExpression) mapRe.get(notParseExpr+BACKLASH).clone();
+        }
         //按照先后顺序组成抽象语法树
-       // ReadXmlExpression expression = buildTree(needParseExpr,prefixRe);
+        ReadXmlExpression expression = buildTree(needParseExpr,prefixRe,mapPathAndRe,mapRe);
         
-       // return expression;
-        return null;
+        return expression;
     }
 
     private static ReadXmlExpression buildTree(String prefixStr,ReadXmlExpression prefixRe,
@@ -130,7 +137,11 @@ public class Parser {
             }
 
             //每次生成一个新的 抽象树对象，就应该添加到缓存里面，应该是把retRe 克隆一份
-
+            if(prefixStr!=null && prefixStr.trim().length()>0){
+                mapRe.put(prefixStr + BACKLASH + path , (ReadXmlExpression)re.clone());
+            }else{
+                mapRe.put(path, (ReadXmlExpression)re.clone());
+            }
         }
 
         return retRe;

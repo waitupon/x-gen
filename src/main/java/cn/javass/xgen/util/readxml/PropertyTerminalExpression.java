@@ -16,4 +16,16 @@ public class PropertyTerminalExpression extends ReadXmlExpression{
         ss[0] = element.getAttribute(propertyName);
         return ss;
     }
+
+    @Override
+    public Object clone(){
+        Object obj = null;
+        try{
+            obj = super.clone();
+        }catch(Exception err){
+            err.printStackTrace();
+        }
+
+        return obj;
+    }
 }
