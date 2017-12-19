@@ -54,7 +54,7 @@ public class Parser {
         //4：获取剩下的需要解析的部分
         String needParseExpr = "";
         if(notParseExpr.trim().length() == 0){
-            needParseExpr = notParseExpr;
+            needParseExpr = expr;
         }else{
             if(notParseExpr.length() < expr.length()){
                 needParseExpr = expr.substring(notParseExpr.length() + 1);
