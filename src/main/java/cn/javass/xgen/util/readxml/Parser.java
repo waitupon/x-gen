@@ -43,7 +43,7 @@ public class Parser {
         ParseMemento memento = ParseCaretaker.newInstance().retriveMemento();
         //2：从备忘录中取出数据
         Map<String,ReadXmlExpression> mapRe = null;
-        if(mapRe == null){
+        if(memento == null){
             mapRe = new HashMap<String, ReadXmlExpression>();
         }else {
             mapRe = ((MementoImpl) memento).getMapRe();
@@ -83,7 +83,7 @@ public class Parser {
             int lastIndex = expr.lastIndexOf(BACKLASH);
             if(lastIndex >0){
                 expr = expr.substring(0,lastIndex);
-                flag = mapRe.containsKey(expr);
+                flag = mapRe.containsKey(expr+BACKLASH);
             }else{
                 flag = true;
                 expr = "";
@@ -106,7 +106,7 @@ public class Parser {
             prefixRe = (ReadXmlExpression) mapRe.get(notParseExpr+BACKLASH).clone();
         }
         //按照先后顺序组成抽象语法树
-        ReadXmlExpression expression = buildTree(needParseExpr,prefixRe,mapPathAndRe,mapRe);
+        ReadXmlExpression expression = buildTree(notParseExpr,prefixRe,mapPathAndRe,mapRe);
         
         return expression;
     }
@@ -152,6 +152,43 @@ public class Parser {
      * @return
      */
     private static ReadXmlExpression getLastRE(ReadXmlExpression prefixRe) {
+        ReadXmlExpression lastRe = prefixRe;
+        boolean flag = true;
+
+        while (flag){
+            if(lastRe instanceof ElementsExpression){
+                if(((ElementExpression)lastRe).getEles().size()>0){
+                    lastRe = ((ElementExpression)lastRe).getEles().get(0);
+
+                    if(lastRe instanceof ElementsExpression){
+                        flag = ((ElementExpression)lastRe).getEles().size() >0;
+                    }else if(lastRe instanceof ElementsExpression){
+                        flag = ((ElementsExpression)lastRe).getEles().size() >0;
+                    }else{
+                        flag = false;
+                    }
+                }else {
+                    flag = false;
+                }
+            }else if(lastRe instanceof ElementsExpression){
+                if(((ElementsExpression)lastRe).getEles().size()>0){
+                    lastRe = ((ElementsExpression)lastRe).getEles().get(0);
+
+                    if(lastRe instanceof ElementsExpression){
+                        flag = ((ElementExpression)lastRe).getEles().size() >0;
+                    }else if(lastRe instanceof ElementsExpression){
+                        flag = ((ElementsExpression)lastRe).getEles().size() >0;
+                    }else{
+                        flag = false;
+                    }
+                }else {
+                    flag = false;
+                }
+
+            }else {
+                flag = false;
+            }
+        }
 
         return null;
     }
