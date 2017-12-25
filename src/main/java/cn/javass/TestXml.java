@@ -7,7 +7,7 @@ import java.io.InputStream;
 public class TestXml {
 
     public static void main(String[] args) throws Exception {
-        ElementExpression genConf = new ElementExpression("GenConf","");
+//        ElementExpression genConf = new ElementExpression("GenConf","");
 //        ElementExpression themes = new ElementExpression("Themes","");
 //        ElementExpression theme = new ElementExpression("Theme","");
 //        PropertyTerminalExpression id = new PropertyTerminalExpression("id");
@@ -28,9 +28,11 @@ public class TestXml {
 //
         Context ctx = Context.newInstance("xgenconfxml/GenConf.xml");
 
-        String[] ss = Parser.parse("GenConf/NeedGens/NeedGen/Params/Param$[id=fileName]").interpret(ctx);
-        for(int i=0;i<ss.length;i++){
-            System.out.println("ss = " + ss[i]);
+        for (int j=0; j<5;j++) {
+            String[] ss = Parser.parse("GenConf/NeedGens/NeedGen/Params/Param$[id=fileName]").interpret(ctx);
+            for (int i = 0; i < ss.length; i++) {
+                System.out.println("ss = " + ss[i]);
+            }
         }
 
     }
