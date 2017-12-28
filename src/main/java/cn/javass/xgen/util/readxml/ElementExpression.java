@@ -83,7 +83,7 @@ public class ElementExpression extends ReadXmlExpression{
             obj = (ElementExpression) super.clone();
             List<ReadXmlExpression> objEles = new ArrayList<ReadXmlExpression>();
             for (ReadXmlExpression re : eles) {
-                objEles.add(re);
+                objEles.add((ReadXmlExpression)re.clone());
             }
             obj.setEles(objEles);
         }catch (Exception e){

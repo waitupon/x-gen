@@ -28,4 +28,12 @@ public class ModuleGenConfModel {
     public void setExtendConfs(Map<String, ExtendConfModel> extendConfs) {
         this.extendConfs = extendConfs;
     }
+
+    @Override
+    public String toString() {
+        return "ModuleGenConfModel{" +
+                "needGenTypes=" + needGenTypes +
+                ", extendConfs=" + extendConfs +
+                '}';
+    }
 }

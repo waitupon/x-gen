@@ -39,4 +39,13 @@ public class GenConfModel {
     public void setMapConstants(Map<String, String> mapConstants) {
         this.mapConstants = mapConstants;
     }
+
+    @Override
+    public String toString() {
+        return "GenConfModel{" +
+                "needGens=" + needGens +
+                ", themes=" + themes +
+                ", mapConstants=" + mapConstants +
+                '}';
+    }
 }

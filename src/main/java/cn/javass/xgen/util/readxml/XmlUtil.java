@@ -12,6 +12,7 @@ public class XmlUtil {
 
 
     public static Document getDocument(String filePathName) throws Exception {
+        System.out.println(filePathName);
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
         Document document = documentBuilder.parse(XmlUtil.class.getClassLoader().getResourceAsStream(filePathName));

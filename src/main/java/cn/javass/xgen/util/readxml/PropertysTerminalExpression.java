@@ -16,7 +16,7 @@ public class PropertysTerminalExpression extends ReadXmlExpression{
 
         String[]ss = new String[preEles.size()];
         for(int i=0;i<ss.length;i++){
-            ss[0] = preEles.get(i).getAttribute(propertyName);
+            ss[i] = preEles.get(i).getAttribute(propertyName);
         }
 
         return ss;

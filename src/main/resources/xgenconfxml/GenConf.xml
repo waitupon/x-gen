@@ -110,7 +110,7 @@
 		</NeedGen>-->
 	</NeedGens>
 	<Themes>
-		<Theme id="simple">cn/javass/themes/simple</Theme>
+		<Theme id="simple">theme/simple</Theme>
 	</Themes>
 	<Constants>
 		<Constant id="prePackage">cn.javass</Constant>

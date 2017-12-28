@@ -130,7 +130,7 @@ public class Parser {
                     preEx = re;
                 }else if(preEx instanceof ElementsExpression){
                     ElementsExpression ele = (ElementsExpression)preEx;
-                    ele.addEle(preEx);
+                    ele.addEle(re);
 
                     preEx = re;
                 }
@@ -138,9 +138,9 @@ public class Parser {
 
             //每次生成一个新的 抽象树对象，就应该添加到缓存里面，应该是把retRe 克隆一份
             if(prefixStr!=null && prefixStr.trim().length()>0){
-                mapRe.put(prefixStr + BACKLASH + path , (ReadXmlExpression)re.clone());
+                mapRe.put(prefixStr + BACKLASH + path , (ReadXmlExpression)retRe.clone());
             }else{
-                mapRe.put(path, (ReadXmlExpression)re.clone());
+                mapRe.put(path, (ReadXmlExpression)retRe.clone());
             }
         }
 
@@ -156,11 +156,11 @@ public class Parser {
         boolean flag = true;
 
         while (flag){
-            if(lastRe instanceof ElementsExpression){
+            if(lastRe instanceof ElementExpression){
                 if(((ElementExpression)lastRe).getEles().size()>0){
                     lastRe = ((ElementExpression)lastRe).getEles().get(0);
 
-                    if(lastRe instanceof ElementsExpression){
+                    if(lastRe instanceof ElementExpression){
                         flag = ((ElementExpression)lastRe).getEles().size() >0;
                     }else if(lastRe instanceof ElementsExpression){
                         flag = ((ElementsExpression)lastRe).getEles().size() >0;
@@ -174,7 +174,7 @@ public class Parser {
                 if(((ElementsExpression)lastRe).getEles().size()>0){
                     lastRe = ((ElementsExpression)lastRe).getEles().get(0);
 
-                    if(lastRe instanceof ElementsExpression){
+                    if(lastRe instanceof ElementExpression){
                         flag = ((ElementExpression)lastRe).getEles().size() >0;
                     }else if(lastRe instanceof ElementsExpression){
                         flag = ((ElementsExpression)lastRe).getEles().size() >0;
@@ -190,7 +190,7 @@ public class Parser {
             }
         }
 
-        return null;
+        return lastRe;
     }
 
     private static Map<String,ReadXmlExpression> mapPath2Expression(Map<String, ParseModel> mapPath) {
@@ -254,11 +254,12 @@ public class Parser {
                     if(dotIndex > 0){
                         String eleName1 = eleName.substring(0,dotIndex);
                         String propName = eleName.substring(dotIndex+1);
-
                         buffer.append(eleName1 + DOT);
-                        setParsePath(buffer,eleName1,false,false,pathMap);
 
+
+                        setParsePath(buffer,eleName1,false,false,pathMap);
                         buffer.append(propName);
+
                         setParsePath(buffer,propName,true,true,pathMap);
                     }else{
                         buffer.append(eleName);
