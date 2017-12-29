@@ -43,6 +43,7 @@ public class TestXml {
 
 
             String[] ss = Parser.parse("GenConf/NeedGens/NeedGen$.id$").interpret(ctx);
+        ctx.init();
             String[] ss2 = Parser.parse("GenConf/NeedGens/NeedGen$.provider$").interpret(ctx);
            // String[] ss2 = Parser.parse("GenConf/NeedGens/NeedGen/Params/Param$[id=fileName1]").interpret(ctx);
             for (int i = 0; i < ss.length; i++) {//

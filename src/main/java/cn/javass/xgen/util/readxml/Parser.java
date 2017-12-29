@@ -1,11 +1,11 @@
 package cn.javass.xgen.util.readxml;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-/**
- * 将  /a/b[id=z]/c$.id$
- * 转化成需要的解释器元素
- */
 public class Parser {
     /**
      *   特殊字符定义
@@ -40,7 +40,7 @@ public class Parser {
     public static ReadXmlExpression parse(String expr){
         ReadXmlExpression expression = null;
         //1：应该获取备忘录对象
-        ParseMemento memento = ParseCaretaker.newInstance().retriveMemento();
+        ParseMemento memento = ParseCaretaker.getInstance().retriveMemento();
         //2：从备忘录中取出数据
         Map<String,ReadXmlExpression> mapRe = null;
         if(memento == null){
@@ -71,7 +71,7 @@ public class Parser {
         }
 
         //6：解析完了，该重新设置 备忘录
-        ParseCaretaker.newInstance().saveMemento(new MementoImpl(mapRe));
+        ParseCaretaker.getInstance().saveMemento(new MementoImpl(mapRe));
 
         return expression;
     }
@@ -107,7 +107,7 @@ public class Parser {
         }
         //按照先后顺序组成抽象语法树
         ReadXmlExpression expression = buildTree(notParseExpr,prefixRe,mapPathAndRe,mapRe);
-        
+
         return expression;
     }
 
@@ -208,25 +208,25 @@ public class Parser {
     private static ReadXmlExpression parseModel2ReadXmlExpression(ParseModel model) {
         ReadXmlExpression obj = null;
         if(!model.isEnd()){
-                if(model.isSingleValue()){
-                    obj = new ElementExpression(model.getEleName(),model.getCondition());
-                }else{
-                    obj = new ElementsExpression(model.getEleName(),model.getCondition());
-                }
+            if(model.isSingleValue()){
+                obj = new ElementExpression(model.getEleName(),model.getCondition());
+            }else{
+                obj = new ElementsExpression(model.getEleName(),model.getCondition());
+            }
         }else {
-               if(model.isPropertyValue()){
-                   if(model.isSingleValue()){
-                        obj = new PropertyTerminalExpression(model.getEleName());
-                   }else{
-                        obj = new PropertysTerminalExpression(model.getEleName());
-                   }
-               }else{
-                   if(model.isSingleValue()){
-                       obj = new ElementTerminalExpression(model.getEleName(),model.getCondition());
-                   }else{
-                       obj = new ElementsTerminalExpression(model.getEleName(),model.getCondition());
-                   }
-               }
+            if(model.isPropertyValue()){
+                if(model.isSingleValue()){
+                    obj = new PropertyTerminalExpression(model.getEleName());
+                }else{
+                    obj = new PropertysTerminalExpression(model.getEleName());
+                }
+            }else{
+                if(model.isSingleValue()){
+                    obj = new ElementTerminalExpression(model.getEleName(),model.getCondition());
+                }else{
+                    obj = new ElementsTerminalExpression(model.getEleName(),model.getCondition());
+                }
+            }
 
         }
 
@@ -243,56 +243,54 @@ public class Parser {
         StringBuffer buffer = new StringBuffer();
 
         while (tokenizer.hasMoreTokens()){
-                String eleName = tokenizer.nextToken();
-                if(tokenizer.hasMoreTokens()){
-                    buffer.append(eleName + BACKLASH);
-                    //不是最后一个
-                    setParsePath(buffer,eleName,false,false,pathMap);
+            String eleName = tokenizer.nextToken();
+            if(tokenizer.hasMoreTokens()){
+                buffer.append(eleName + BACKLASH);
+                //不是最后一个
+                setParsePath(buffer,eleName,false,false,pathMap);
+            }else{
+                //最后一个
+                int dotIndex = eleName.indexOf(DOT);
+                if(dotIndex > 0){
+                    String eleName1 = eleName.substring(0,dotIndex);
+                    String propName = eleName.substring(dotIndex+1);
+                    buffer.append(eleName1 + DOT);
+
+
+                    setParsePath(buffer,eleName1,false,false,pathMap);
+                    buffer.append(propName);
+
+                    setParsePath(buffer,propName,true,true,pathMap);
                 }else{
-                    //最后一个
-                    int dotIndex = eleName.indexOf(DOT);
-                    if(dotIndex > 0){
-                        String eleName1 = eleName.substring(0,dotIndex);
-                        String propName = eleName.substring(dotIndex+1);
-                        buffer.append(eleName1 + DOT);
-
-
-                        setParsePath(buffer,eleName1,false,false,pathMap);
-                        buffer.append(propName);
-
-                        setParsePath(buffer,propName,true,true,pathMap);
-                    }else{
-                        buffer.append(eleName);
-                        setParsePath(buffer,eleName,false,true,pathMap);
-                    }
+                    buffer.append(eleName);
+                    setParsePath(buffer,eleName,false,true,pathMap);
                 }
+            }
         }
         return pathMap;
     }
 
     public static void setParsePath(StringBuffer buffer,String eleName,boolean propertyValue,boolean end,Map<String, ParseModel> mapPath){
-            ParseModel model = new ParseModel();
-            model.setPropertyValue(propertyValue);
-            model.setEnd(end);
-            model.setSingleValue( !(eleName.indexOf(DOLLAR)  >0) );
+        ParseModel model = new ParseModel();
+        model.setPropertyValue(propertyValue);
+        model.setEnd(end);
+        model.setSingleValue( !(eleName.indexOf(DOLLAR)  >0) );
 
-            eleName = eleName.replace(DOLLAR,"");
+        eleName = eleName.replace(DOLLAR,"");
 
-            int tempBegin = 0;
-            int tempEnd = 0;
+        int tempBegin = 0;
+        int tempEnd = 0;
 
-            if((tempBegin = eleName.indexOf(OPEN_BRACKET)) > 0){
-                    tempEnd = eleName.indexOf(CLOSE_BRACKET);
-                    model.setCondition(eleName.substring(tempBegin + 1,tempEnd));
-                    eleName = eleName.substring(0,tempBegin);
-            }
+        if((tempBegin = eleName.indexOf(OPEN_BRACKET)) > 0){
+            tempEnd = eleName.indexOf(CLOSE_BRACKET);
+            model.setCondition(eleName.substring(tempBegin + 1,tempEnd));
+            eleName = eleName.substring(0,tempBegin);
+        }
 
-            model.setEleName(eleName);
+        model.setEleName(eleName);
 
-            mapPath.put(buffer.toString(),model);
+        mapPath.put(buffer.toString(),model);
 
-            listElePath.add(buffer.toString());
+        listElePath.add(buffer.toString());
     }
-
-
 }

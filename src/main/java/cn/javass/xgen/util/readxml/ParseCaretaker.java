@@ -9,7 +9,7 @@ public class ParseCaretaker {
     }
 
 
-    public static ParseCaretaker newInstance(){
+    public static ParseCaretaker getInstance(){
         return taker;
     }
 
