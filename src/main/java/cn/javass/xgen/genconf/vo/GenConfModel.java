@@ -48,4 +48,13 @@ public class GenConfModel {
                 ", mapConstants=" + mapConstants +
                 '}';
     }
+
+    public ThemeModel getThemeById(String themeId) {
+        for(ThemeModel tm : this.themes){
+            if(tm.getId().equals(themeId)){
+                return tm;
+            }
+        }
+        return new ThemeModel();
+    }
 }
