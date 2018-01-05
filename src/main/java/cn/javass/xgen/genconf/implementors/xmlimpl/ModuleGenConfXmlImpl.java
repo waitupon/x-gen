@@ -2,6 +2,7 @@ package cn.javass.xgen.genconf.implementors.xmlimpl;
 
 import cn.javass.xgen.genconf.constants.ExpressionEnum;
 import cn.javass.xgen.genconf.implementors.ModuleGenConfImplementor;
+import cn.javass.xgen.genconf.implementors.dynamicparse.ParseContext;
 import cn.javass.xgen.genconf.vo.ExtendConfModel;
 import cn.javass.xgen.genconf.vo.GenConfModel;
 import cn.javass.xgen.genconf.vo.ModuleConfModel;
@@ -31,7 +32,7 @@ public class ModuleGenConfXmlImpl implements ModuleGenConfImplementor{
     private Context getContext(Map<String, String> param) {
         Context ctx = null;
         try {
-            ctx = Context.newInstance(new ModuleGenConfBuilder().addXmlFilePre()
+            ctx = Context.newInstance(new ModuleGenConfBuilder().addXmlFilePre().addSeparator()
                                     .addOtherValue(param.get(ExpressionEnum.fileName.getExpr())).build());
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,7 +57,7 @@ public class ModuleGenConfXmlImpl implements ModuleGenConfImplementor{
         ctx.init();
         List<String>list = new ArrayList<String>();
         ReadXmlExpression re = Parser.parse(new ModuleGenConfBuilder().addModuleGenConf().addSeparator().addNeedGenTypes()
-                .addSeparator().addNeedGenType().addOpenBracket().addId().addEqual().addOtherValue(needGenTypeId)
+                .addSeparator().addNeedGenType().addDollar().addOpenBracket().addId().addEqual().addOtherValue(needGenTypeId)
                 .addCloseBracket().addSeparator().addNeedGenOutType().addDollar().addDot().addId().addDollar().build());
         String[] ss = re.interpret(ctx);
         for(String s : ss){
@@ -92,8 +93,8 @@ public class ModuleGenConfXmlImpl implements ModuleGenConfImplementor{
             }
             map.put(model.getId(),model);
         }
-
-
+        //讲变量转换为所需值
+        map = new ParseContext().parse(gm, map);
 
         return map;
     }

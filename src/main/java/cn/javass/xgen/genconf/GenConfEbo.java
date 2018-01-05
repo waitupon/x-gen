@@ -3,8 +3,11 @@ package cn.javass.xgen.genconf;
 import cn.javass.xgen.genconf.confmanager.ConfManager;
 import cn.javass.xgen.genconf.implementors.GenConfImplementor;
 import cn.javass.xgen.genconf.vo.GenConfModel;
+import cn.javass.xgen.genconf.vo.ModuleConfModel;
 import junit.framework.Assert;
 import junit.framework.AssertionFailedError;
+
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/12/1 0001.
@@ -30,5 +33,9 @@ public class GenConfEbo implements GenConfEbi{
        public GenConfModel getGenConf() {
               return ConfManager.newInstance(provider).getGenConf();
        }
+
+    public Map<String, ModuleConfModel> getMapModuleConf() {
+        return  ConfManager.newInstance(provider).getModuleConfMap();
+    }
 
 }

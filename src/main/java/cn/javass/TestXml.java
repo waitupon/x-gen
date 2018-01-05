@@ -13,9 +13,11 @@ public class TestXml {
     @Test
     public void testModelLoadXml(){
         GenConfEbi genConfEbi = GenConfFactory.createGenConfEbi(new GenConfXmlImpl());
-        System.out.println(genConfEbi.getGenConf());
+        //System.out.println(genConfEbi.getGenConf());
+        System.out.println(genConfEbi.getMapModuleConf());
 
     }
+
 
     @Test
     public void testParseXml() throws Exception {
@@ -39,16 +41,16 @@ public class TestXml {
 //            params.addEle(param);
         System.out.println(new GenConfBuilder().addGenConf().addSeparator().addNeedGens().addSeparator()
                 .addNeedGen().addDollar().addDot().addProvider().addDollar().build());
-            Context ctx = Context.newInstance("xgenconfxml/GenConf.xml");
+            Context ctx = Context.newInstance("xgenconfxml/UserGenConf.xml");
 
 
-            String[] ss = Parser.parse("GenConf/NeedGens/NeedGen$.id$").interpret(ctx);
-        ctx.init();
-            String[] ss2 = Parser.parse("GenConf/NeedGens/NeedGen$.provider$").interpret(ctx);
+            String[] ss = Parser.parse("ModuleGenConf/NeedGenTypes/NeedGenType$[id=GenVo]/NeedGenOutType$.id$").interpret(ctx);
+//        ctx.init();
+//            String[] ss2 = Parser.parse("GenConf/NeedGens/NeedGen$.provider$").interpret(ctx);
            // String[] ss2 = Parser.parse("GenConf/NeedGens/NeedGen/Params/Param$[id=fileName1]").interpret(ctx);
             for (int i = 0; i < ss.length; i++) {//
                 System.out.println("ss = " + ss[i]);
-                System.out.println("ss2 = " + ss2[i]);
+               // System.out.println("ss2 = " + ss2[i]);
             }
 
     }
